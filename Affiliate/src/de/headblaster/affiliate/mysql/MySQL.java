@@ -3,9 +3,11 @@ package de.headblaster.affiliate.mysql;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 public class MySQL {
 
@@ -44,8 +46,35 @@ public class MySQL {
 		
 	}
 	
-	public static Connection getConnection() {
+	public Connection getConnection() {
 		return con;
+	}
+	
+	public void disconnect() throws SQLException {
+		
+		if(con.isClosed() == false) {
+			
+			con.close();
+			
+		}
+		
+	}
+
+	public boolean inTable(Player p) throws SQLException {
+
+			PreparedStatement ps = getConnection().prepareStatement("SELECT * FROM Affiliate WHERE uuid='"  + p.getUniqueId().toString() +  "'");
+			ps.executeQuery();
+			ResultSet rs = ps.getResultSet();
+			
+			if(rs.next()) {
+				
+				return true;
+				
+			} else 
+			
+			return false;
+		
+		
 	}
 	
 }
